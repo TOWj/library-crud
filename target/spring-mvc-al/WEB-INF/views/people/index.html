@@ -7,14 +7,15 @@
 <body>
 
 <div th:each="person : ${people}">
+<!--    Как переходить и куда указывается в href, где еще и объясняется, что такое id
+То есть здесь мы передаем человека, и можем перейти на его непосредственную страницу с помощью ссылки по его id-->
     <a th:href="@{/people/{id}(id=${person.getId()})}"
-       th:text="${person.getName() + ', ' + person.getAge()}">user</a>
+       th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">user</a>
 </div>
-
-<br/>
 <hr/>
+<!--Кнопка для создания нового человека-->
 <form th:method="get" th:action="@{/people/new}">
-    <input type="submit" value="Create new person!">
+    <input type="submit" value="Create new person">
 </form>
 
 </body>

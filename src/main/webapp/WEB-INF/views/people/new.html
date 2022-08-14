@@ -5,26 +5,21 @@
     <title>New person</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/people}" th:object="${person}">
-    <label for="name">Enter name: </label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
-    <br/>
-    <label for="age">Enter age: </label>
-    <input type="text" th:field="*{age}" id="age"/>
-    <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</div>
-    <br/>
-    <label for="email">Enter email: </label>
-    <input type="text" th:field="*{email}" id="email"/>
-    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-    <br/>
-    <label for="address">Enter address: </label>
-    <input type="text" th:field="*{address}" id="address"/>
-    <div style="color:red" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Address Error</div>
-    <br/>
-    <input type="submit" value="Create!"/>
+<!--object - принимаем на вход объект, в нашем случае - нового Person-->
+<form th:method="post" th:action="@{/people}" th:object="${person}">
+     <div>
+<!--         Надпись для поля name - Name, задаем по id чуть ниже-->
+         <label for="name">Name</label>
+<!--         Тип содержимого поля - text, применяется для поля fullName, ну и задаем id для label-->
+         <input type="text" th:field="*{fullName}" id="name"/>
+         <br/>
+         <label for="yearOfBirth">Year of birth</label>
+         <input type="text" th:field="*{yearOfBirth}" id="yearOfBirth"/>
+         <br/>
+<!--         Кнопка submit с надписью Create-->
+         <input type="submit" value="Create!">
+     </div>
 </form>
-
 
 </body>
 </html>
