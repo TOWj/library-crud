@@ -2,11 +2,9 @@ package com.nov.spring.models;
 
 
 
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.*;
 
-@Component
 public class Book {
 
     private int id;
