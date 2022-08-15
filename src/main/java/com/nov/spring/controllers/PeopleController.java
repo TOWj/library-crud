@@ -6,7 +6,10 @@ import com.nov.spring.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -27,8 +30,8 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        Person person = personDAO.show(id);
-        model.addAttribute("person", person);
+        model.addAttribute("person", personDAO.show(id));
+        model.addAttribute("books", personDAO.getBooksById(id));
         return "people/show";
     }
 
@@ -41,7 +44,12 @@ public class PeopleController {
 
 
     @PostMapping()//адреса нет, потому что мы переходим без указания страницы в people по post-запросу
-    public String create(@ModelAttribute("person") Person person) {
+    public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        //Добавили валидатор для Person, проверяем, есть ли ошибки
+        if (bindingResult.hasErrors()) {
+            //Если есть, возвращаем снова ту же страницу создания Person
+            return "people/new";
+        }
         personDAO.save(person);
         //Здесь мы будем создавать нового человека на основе переданных из people/new данных, и добавлять его в БД
         //После добавления, редиректимся в people, т.е. в метод index.
@@ -55,15 +63,22 @@ public class PeopleController {
     }
 
     @PatchMapping("/{id}")//Переходя по id в people из edit.html с patch-запросом
-    public String update(@ModelAttribute("person") Person person, @PathVariable("id") int id) {//сразу тащим объект Person и переменную id из адреса
+    public String update(@ModelAttribute("person") @Valid Person person,//Добавили валидатор для Person, проверяем, есть ли ошибки
+                         BindingResult bindingResult,
+                         @PathVariable("id") int id) {
+        if (bindingResult.hasErrors()) {
+            return "people/edit";
+        }
+        //Тащим объект Person и переменную id из адреса
         personDAO.update(person, id);
         return "redirect:/people/{id}";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id){
+    public String delete(@PathVariable("id") int id) {
         personDAO.delete(id);
         return "redirect:/people";
     }
+
 
 }

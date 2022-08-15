@@ -7,11 +7,14 @@ public class Person {
 
     private int id;
 
+
+    @NotEmpty(message = "Name should be not empty")
+    @Size(min = 2, max = 100, message = "Name length should be between 2 and 100 char")
     private String fullName;
 
+    @Min(value = 1900, message = "Year of birth should be greater than 1900")
     private int yearOfBirth;
 
-    //конструктор по умолчанию для Spring
     public Person() {
     }
 

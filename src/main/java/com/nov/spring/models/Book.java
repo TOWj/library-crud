@@ -1,18 +1,21 @@
 package com.nov.spring.models;
 
 
-
-
 import javax.validation.constraints.*;
 
 public class Book {
 
     private int id;
 
+    @NotEmpty(message = "Title shouldn't be empty")
+    @Size(min = 2, max = 100, message = "Title length should be between 2 and 100")
     private String title;
 
+    @NotEmpty(message = "Author shouldn't be empty")
+    @Size(min = 2, max = 100, message = "Author name length should be between 2 and 100")
     private String author;
 
+    @Min(value = 1500, message = "The year should be greater than 1500")
     private int year;
 
     public Book() {
