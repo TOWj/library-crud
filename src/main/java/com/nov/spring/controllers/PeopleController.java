@@ -3,6 +3,7 @@ package com.nov.spring.controllers;
 
 import com.nov.spring.dao.PersonDAO;
 import com.nov.spring.models.Person;
+import com.nov.spring.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +18,12 @@ public class PeopleController {
 
     private final PersonDAO personDAO;
 
+    private final PersonValidator personValidator;
+
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
         this.personDAO = personDAO;
+        this.personValidator = personValidator;
     }
 
     @GetMapping
@@ -45,6 +49,8 @@ public class PeopleController {
 
     @PostMapping()//адреса нет, потому что мы переходим без указания страницы в people по post-запросу
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        //Добавляем валидацию для Person по уникальности ФИО (ошибки добавляем в bindingResult)
+        personValidator.validate(person, bindingResult);
         //Добавили валидатор для Person, проверяем, есть ли ошибки
         if (bindingResult.hasErrors()) {
             //Если есть, возвращаем снова ту же страницу создания Person
