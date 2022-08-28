@@ -1,8 +1,9 @@
 package com.nov.spring.controllers;
 
 
-import com.nov.spring.dao.PersonDAO;
 import com.nov.spring.models.Person;
+import com.nov.spring.services.BooksService;
+import com.nov.spring.services.PeopleService;
 import com.nov.spring.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,26 +17,29 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class PeopleController {
 
-    private final PersonDAO personDAO;
+    private final BooksService booksService;
+
+    private final PeopleService peopleService;
 
     private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
-        this.personDAO = personDAO;
+    public PeopleController(BooksService booksService, PeopleService peopleService, PersonValidator personValidator) {
+        this.booksService = booksService;
+        this.peopleService = peopleService;
         this.personValidator = personValidator;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("people", personDAO.index());
+        model.addAttribute("people", peopleService.findAll());
         return "people/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.show(id));
-        model.addAttribute("books", personDAO.getBooksById(id));
+        model.addAttribute("person", peopleService.findOne(id));
+        model.addAttribute("books", peopleService.getBooksByPersonId(id));
         return "people/show";
     }
 
@@ -56,7 +60,7 @@ public class PeopleController {
             //Если есть, возвращаем снова ту же страницу создания Person
             return "people/new";
         }
-        personDAO.save(person);
+        peopleService.save(person);
         //Здесь мы будем создавать нового человека на основе переданных из people/new данных, и добавлять его в БД
         //После добавления, редиректимся в people, т.е. в метод index.
         return "redirect:/people";
@@ -64,7 +68,7 @@ public class PeopleController {
 
     @GetMapping("/{id}/edit")//Когда переходим по этому пути
     public String edit(Model model, @PathVariable("id") int id) {//Получаем от get-запроса id и модель
-        model.addAttribute("person", personDAO.show(id));//кладем в модель по ключу person человека с указанным id
+        model.addAttribute("person", peopleService.findOne(id));//кладем в модель по ключу person человека с указанным id
         return "people/edit";//Переходим в edit.html
     }
 
@@ -76,13 +80,13 @@ public class PeopleController {
             return "people/edit";
         }
         //Тащим объект Person и переменную id из адреса
-        personDAO.update(person, id);
+        peopleService.update(id, person);
         return "redirect:/people/{id}";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDAO.delete(id);
+        peopleService.delete(id);
         return "redirect:/people";
     }
 

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Person</title>
 </head>
 <body>
@@ -12,7 +12,7 @@
 <p th:text="${'Year of birth - '+ person.getYearOfBirth()}">Year of birth</p>
 <!--Проверка, не пустое ли поле books (мы его добавили в ModelAttribute)-->
 <div th:if="${books.isEmpty()}">
-<!--    Если пустое-->
+    <!--    Если пустое-->
     <p>Person doesn't have any books</p>
 
 </div>
@@ -23,7 +23,16 @@
     <b>Books:</b>
     <br/>
     <table th:each="book : ${books}">
-        <tr th:text="${book.getTitle() + ', ' + book.getAuthor()}">book</tr>
+        <tr>
+            <td>
+                <span th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"
+                      th:style="${book.isExpired()} ? 'color: red' : 'color: black'">book
+                </span>
+            </td>
+        </tr>
+
+
+        <!--        <tr th:text="${book.getTitle() + ', ' + book.getAuthor()}">book</tr>-->
     </table>
 </div>
 <hr/>

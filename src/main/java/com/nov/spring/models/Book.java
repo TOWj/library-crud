@@ -1,10 +1,16 @@
 package com.nov.spring.models;
 
-
+import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Date;
 
+@Entity
+@Table(name = "book")
 public class Book {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotEmpty(message = "Title shouldn't be empty")
@@ -18,6 +24,17 @@ public class Book {
     @Min(value = 1500, message = "The year should be greater than 1500")
     private int year;
 
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean expired;
+
     public Book() {
     }
 
@@ -25,6 +42,30 @@ public class Book {
         this.title = title;
         this.author = author;
         this.year = year;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 
     public int getId() {
