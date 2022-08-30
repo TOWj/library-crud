@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.crypto.Data;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -34,12 +33,12 @@ public class PeopleService {
         return person.orElse(null);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void save(Person person) {
         peopleRepository.save(person);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void update(int id, Person updatedPerson) {
         updatedPerson.setId(id);
         peopleRepository.save(updatedPerson);
@@ -47,7 +46,7 @@ public class PeopleService {
         //именно поэтому мы сначала задаем id переданному Person
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(int id) {
         peopleRepository.deleteById(id);
     }
@@ -60,17 +59,16 @@ public class PeopleService {
         Optional<Person> person = peopleRepository.findById(id);
 
         if (person.isPresent()) {
-            List<Book> books = person.get().getBooks();
-            Hibernate.initialize(books);//необязательно, делаем на всякий случай
+            Hibernate.initialize(person.get().getBooks());//необязательно, делаем на всякий случай
 
             //Проверка просрочки книг
-            books.forEach(book -> {
+            person.get().getBooks().forEach(book -> {
                 long diffInMillis = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
                 if (diffInMillis > 864000000) {
                     book.setExpired(true); //просрочена
                 }
             });
-            return books;
+            return person.get().getBooks();
         } else {
             return Collections.emptyList();
         }

@@ -5,23 +5,25 @@ import javax.validation.constraints.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "book")
+@Table(name = "Book")
 public class Book {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty(message = "Title shouldn't be empty")
-    @Size(min = 2, max = 100, message = "Title length should be between 2 and 100")
+    @NotEmpty(message = "Название книги не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
+    @Column(name = "title")
     private String title;
 
-    @NotEmpty(message = "Author shouldn't be empty")
-    @Size(min = 2, max = 100, message = "Author name length should be between 2 and 100")
+    @NotEmpty(message = "Автор не должен быть пустым")
+    @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
+    @Column(name = "author")
     private String author;
 
-    @Min(value = 1500, message = "The year should be greater than 1500")
+    @Min(value = 1500, message = "Год должен быть больше, чем 1500")
+    @Column(name = "year")
     private int year;
 
     @ManyToOne
@@ -33,39 +35,16 @@ public class Book {
     private Date takenAt;
 
     @Transient
-    private boolean expired;
+    private boolean expired; // Hibernate не будет замечать этого поля, что нам и нужно. По-умолчанию false.
 
     public Book() {
+
     }
 
     public Book(String title, String author, int year) {
         this.title = title;
         this.author = author;
         this.year = year;
-    }
-
-    public Person getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Person owner) {
-        this.owner = owner;
-    }
-
-    public Date getTakenAt() {
-        return takenAt;
-    }
-
-    public void setTakenAt(Date takenAt) {
-        this.takenAt = takenAt;
-    }
-
-    public boolean isExpired() {
-        return expired;
-    }
-
-    public void setExpired(boolean expired) {
-        this.expired = expired;
     }
 
     public int getId() {
@@ -98,5 +77,29 @@ public class Book {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

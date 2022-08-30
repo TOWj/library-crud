@@ -1,8 +1,8 @@
 package com.nov.spring.repositories;
 
-import com.nov.spring.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.nov.spring.models.Book;
 
 import java.util.List;
 

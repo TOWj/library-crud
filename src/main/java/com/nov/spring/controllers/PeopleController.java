@@ -2,7 +2,6 @@ package com.nov.spring.controllers;
 
 
 import com.nov.spring.models.Person;
-import com.nov.spring.services.BooksService;
 import com.nov.spring.services.PeopleService;
 import com.nov.spring.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +15,12 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
-
-    private final BooksService booksService;
-
     private final PeopleService peopleService;
 
     private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(BooksService booksService, PeopleService peopleService, PersonValidator personValidator) {
-        this.booksService = booksService;
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
         this.peopleService = peopleService;
         this.personValidator = personValidator;
     }

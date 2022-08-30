@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -28,14 +27,13 @@ import java.util.Properties;
 @ComponentScan("com.nov.spring")
 @PropertySource("classpath:hibernate.properties")
 @EnableTransactionManagement//означает, что теперь транзакции управляются Spring
+@EnableJpaRepositories("com.nov.spring.repositories")
 @EnableWebMvc
-@EnableJpaRepositories("com.nov.spring")
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
 
     private final Environment env;
-
 
     @Autowired
     public SpringConfig(ApplicationContext applicationContext, Environment env) {
@@ -74,10 +72,10 @@ public class SpringConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/project1");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("1234");
+        dataSource.setDriverClassName(env.getRequiredProperty("hibernate.driver_class"));
+        dataSource.setUrl(env.getRequiredProperty("hibernate.connection.url"));
+        dataSource.setUsername(env.getRequiredProperty("hibernate.connection.username"));
+        dataSource.setPassword(env.getRequiredProperty("hibernate.connection.password"));
 
         return dataSource;
     }
@@ -93,7 +91,7 @@ public class SpringConfig implements WebMvcConfigurer {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("ru.alishev.springcourse.models");
+        em.setPackagesToScan("com.nov.spring.models");
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

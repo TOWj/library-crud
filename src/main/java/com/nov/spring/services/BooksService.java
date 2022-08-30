@@ -1,14 +1,14 @@
 package com.nov.spring.services;
 
 
-import com.nov.spring.models.Book;
-import com.nov.spring.models.Person;
-import com.nov.spring.repositories.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.nov.spring.models.Book;
+import com.nov.spring.models.Person;
+import com.nov.spring.repositories.BooksRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -48,16 +48,16 @@ public class BooksService {
         return book.orElse(null);
     }
 
-    public List<Book> searchByTitle(String title) {
-        return booksRepository.findByTitleStartingWith(title);
+    public List<Book> searchByTitle(String query) {
+        return booksRepository.findByTitleStartingWith(query);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void save(Book book) {
         booksRepository.save(book);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void update(int id, Book book) {
         Book bookToUpdate = booksRepository.findById(id).get();//кидаем в Persistence контекст
 
@@ -68,7 +68,7 @@ public class BooksService {
         booksRepository.save(book);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void delete(int id) {
         booksRepository.deleteById(id);
     }
@@ -96,5 +96,4 @@ public class BooksService {
                 }
         );
     }
-
 }
